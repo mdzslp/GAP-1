@@ -1,0 +1,42 @@
+global:
+  scrape_interval: 5s  # Интервал сбора метрик
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['localhost:9090']  # Порт Alertmanager
+
+scrape_configs:
+  # Конфигурация для Node Exporter
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['localhost:9100']  # Порт Node Exporter
+
+  # Конфигурация для MySQL Exporter
+  - job_name: 'mysql_exporter'
+    static_configs:
+      - targets: ['localhost:9105']  # Порт MySQL Exporter
+
+  # Конфигурация для Blackbox Exporter
+  - job_name: 'blackbox_exporter'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Проверка доступности по HTTP
+    static_configs:
+      - targets:
+        - http://localhost:80
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: localhost:9115  # Адрес Blackbox Exporter
+
+  # Конфигурация для Nginx Exporter
+  - job_name: 'nginx_exporter'
+    static_configs:
+      - targets: ['localhost:9113']  # Порт Nginx Exporter
+
+  # Конфигурация для PHP-FPM Exporter
+  - job_name: 'php_exporter'
+    static_configs:
+      - targets: ['localhost:9253']  # Порт PHP-FPM Exporter
