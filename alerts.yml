@@ -1,0 +1,20 @@
+  groups:
+   - name: example
+     rules:
+     - alert: HighLoad
+       expr: node_load1 > 0.5
+       for: 5m
+       labels:
+         severity: critical
+       annotations:
+         summary: "High CPU load detected"
+         description: "The CPU load is above 0.5 for more than 5 minutes."
+
+     - alert: DiskUsage
+       expr: node_filesystem_free / node_filesystem_size < 0.2
+       for: 10m
+       labels:
+         severity: warning
+       annotations:
+         summary: "Disk usage high"
+         description: "Less than 20% of disk space is free."
